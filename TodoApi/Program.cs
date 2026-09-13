@@ -14,6 +14,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 app.UseHttpsRedirection();
+
 var todos = new List<TodoGetDto>
 {
  new(1,"Laern C#",true),
