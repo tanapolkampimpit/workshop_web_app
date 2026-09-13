@@ -16,6 +16,9 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 
+
+var todoGroup = app.MapGroup("/api/todos").WithTags("Todos");
+
 var todos = new List<TodoGetDto>
 {
  new(1,"Laern C#",true),
@@ -23,17 +26,16 @@ var todos = new List<TodoGetDto>
  new(3,"Build A web API",true)
 };
 
-app.MapGet("/api/todos", () => Results.Ok(todos));
+todoGroup.MapGet("/", () => Results.Ok(todos));
 
-app.MapGet("/api/todos/{id}", (int id) =>
+todoGroup.MapGet("/{id}", (int id) =>
 {
     var todo = todos.FirstOrDefault(t => t.Id == id);
 
     return todo is null ? Results.NotFound() : Results.Ok(todo);
 });
 
-
-app.MapPost("/api/todos", (TodoPostDto dto) =>
+todoGroup.MapPost("/", (TodoPostDto dto) =>
 {
     var nextId = todos.Count == 0 ? 1 : todos.Max(t => t.Id + 1);
 
@@ -44,7 +46,7 @@ app.MapPost("/api/todos", (TodoPostDto dto) =>
 
 });
 
-app.MapPut("api/todos/{id}", (int id,TodoPutDto dto) =>
+todoGroup.MapPut("/{id}", (int id, TodoPutDto dto) =>
 {
     try
     {
@@ -65,7 +67,22 @@ app.MapPut("api/todos/{id}", (int id,TodoPutDto dto) =>
 
 }
 );
+todoGroup.MapDelete("/{id}", (int id) =>
+{
+    try
+    {
+        var todo = todos.FirstOrDefault(t => t.Id == id);
+        if (todo is null) return Results.NotFound();
+        todos.Remove(todo);
+        return Results.NoContent();
 
+    }
+
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
 
 
 app.Run();
