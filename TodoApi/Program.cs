@@ -1,11 +1,21 @@
 using Microsoft.VisualBasic;
+using Microsoft.EntityFrameworkCore;
+
 using TodoApi.Dtos;
+using TodoApi.Models;
+using TodoApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConection"))
+
+);
 
 var app = builder.Build();
 
