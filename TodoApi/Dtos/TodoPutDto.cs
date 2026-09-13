@@ -1,6 +1,6 @@
 namespace TodoApi.Dtos;
 
 public record TodoPutDto(
-    string Titel,
+    string Title,
     bool Iscampleted
 );

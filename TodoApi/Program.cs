@@ -104,10 +104,10 @@ todoGroup.MapGet("/", async (AppDbContext db) =>
     var todoGetDtos = todos.Select(t=>
     new TodoGetDto(
         t.Id,
-        t.Titel,
+        t.Title,
         t.IsCompleted
     ));
-    
+
     return todos is null ? Results.NotFound() : Results.Ok(todos);
 });
 
@@ -120,14 +120,14 @@ todoGroup.MapPost("/", async (AppDbContext db, TodoPostDto dto) =>
         var nextId = lastTodo is null ? 1 : lastTodo.Id + 1;
         var todo = new TodoItem
         {
-            Titel = dto.Titel,
+            Title = dto.Title,
             IsCompleted = false,
             CreateAt = DateTime.UtcNow
         };
         db.Todos.Add(todo);
         await db.SaveChangesAsync();
 
-        var todoGetdto = new TodoGetDto(todo.Id, todo.Titel, todo.IsCompleted);
+        var todoGetdto = new TodoGetDto(todo.Id, todo.Title, todo.IsCompleted);
 
         return Results.Created($"{todo.Id}", todo);
     }
